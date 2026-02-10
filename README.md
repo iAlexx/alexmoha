@@ -4,33 +4,17 @@
 
 ## What is included now
 
-This repository now provides an **advanced MVP foundation** for the requested system:
+This repository now provides an **advanced MVP foundation**:
 
-- **Hybrid data stack**: PostgreSQL + Redis + Vector DB (Qdrant).
-- **Async at scale**: Celery + RabbitMQ for fan-out messaging.
-- **Bilingual API contracts**: Arabic/English models for critical outputs.
-- **AI pipeline skeleton**: semantic de-duplication + sentiment + impact scoring.
-- **Market intelligence endpoints**: correlation radar + whale detector.
-- **Growth endpoints**: referral summary + reward rules.
-- **Admin controls**: maintenance mode and emergency pause.
-- **API anti-spam guard**: request window throttling per client.
-
-## Architecture (high level)
-
-```text
-[News Connectors] -> [Ingestion Service] -> [Dedup + Sentiment + Impact]
-                                         -> [PostgreSQL]
-                                         -> [Qdrant embeddings]
-                                         -> [Celery Queue]
-                                                    |
-                                                    v
-                                            [Telegram Dispatcher]
-                                                    |
-                                                    v
-                                                [Users]
-
-[Web Admin] <-> [API Service] <-> [PostgreSQL/Redis]
-```
+- Hybrid stack: PostgreSQL + Redis + RabbitMQ/Celery + Qdrant.
+- Bilingual API contracts (AR/EN) for alerts and AI responses.
+- AI workflows: ingestion dedup/sentiment/impact + Ask News.
+- Proactive intelligence: session master, gap detector, noise filter.
+- VIP+ analytics: backtest-news and fake-news validation gate.
+- Market systems: correlation radar + whale detector + whale watch.
+- Growth systems: referrals, points, auto VIP rewards, leaderboard.
+- Integrations: VIP+ webhook provisioning, infographic generation.
+- Admin controls: maintenance mode, emergency pause, white-label tenants.
 
 ## Quick start
 
@@ -38,28 +22,40 @@ This repository now provides an **advanced MVP foundation** for the requested sy
 docker compose up --build
 ```
 
-Services:
-
-- API: http://localhost:8000
-- RabbitMQ UI: http://localhost:15672 (guest/guest)
-- Qdrant: http://localhost:6333
-
 ## Key endpoints
 
-- `GET /health`
-- `POST /v1/news/ingest`
-- `POST /v1/news/ask`
-- `POST /v1/alerts/economic-calendar`
-- `POST /v1/market/correlation-radar`
-- `POST /v1/market/whale-detector`
-- `GET /v1/growth/referrals/{user_id}`
-- `GET/PUT /v1/growth/referral-rules`
-- `GET/PATCH /v1/admin/runtime-flags`
+- Health: `GET /health`
+- News: `POST /v1/news/ingest`, `POST /v1/news/ask`
+- Alerts: `POST /v1/alerts/economic-calendar`
+- Intelligence:
+  - `POST /v1/intelligence/session-master`
+  - `POST /v1/intelligence/gap-detector`
+  - `POST /v1/intelligence/noise-filter`
+  - `POST /v1/intelligence/vip/backtest-news`
+  - `POST /v1/intelligence/vip/fake-news-check`
+- Market:
+  - `POST /v1/market/correlation-radar`
+  - `POST /v1/market/whale-detector`
+- Social:
+  - `POST /v1/social/sentiment-vote`
+  - `POST /v1/social/whale-watch`
+- Growth:
+  - `GET /v1/growth/referrals/{user_id}`
+  - `GET/PUT /v1/growth/referral-rules`
+  - `GET /v1/growth/leaderboard`
+- Integrations:
+  - `POST /v1/integration/webhook/provision`
+  - `POST /v1/integration/infographic/generate`
+  - `POST /v1/integration/white-label/tenant`
+- Admin: `GET/PATCH /v1/admin/runtime-flags`
 
-## Finalization roadmap (to reach fully production)
+## Performance note
 
-1. Integrate real market/news feeds and normalize symbols/timestamps.
-2. Replace heuristic AI with embeddings + LLM inference + evaluation harness.
-3. Implement persistent DB models/migrations and robust auth/RBAC.
-4. Build Telegram template engine + channel operator toolkit.
-5. Add full web dashboard (operations room, template builder, finance analytics).
+Heavy operations (broadcast, TTS, scheduled reports, webhook fanout, infographic rendering) are designed to run through Celery queues to protect API latency and message delivery throughput.
+
+## Finalization roadmap
+
+1. Persistent DB models/migrations and RBAC/auth.
+2. Real providers: market feeds, on-chain data, Telegram API, TTS, LLM.
+3. Full web admin dashboard with operations room and template builder.
+4. Observability (metrics/tracing), autoscaling, and DR runbooks.

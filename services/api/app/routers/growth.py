@@ -1,6 +1,11 @@
 from fastapi import APIRouter, Query
 
-from app.schemas.growth import ReferralRewardRuleRequest, ReferralRewardRuleResponse, ReferralSummaryResponse
+from app.schemas.growth import (
+    LeaderboardResponse,
+    ReferralRewardRuleRequest,
+    ReferralRewardRuleResponse,
+    ReferralSummaryResponse,
+)
 from app.services.growth import GrowthService
 
 router = APIRouter()
@@ -18,4 +23,9 @@ def referral_rule() -> ReferralRewardRuleResponse:
 
 @router.put('/referral-rules', response_model=ReferralRewardRuleResponse)
 def update_referral_rule(payload: ReferralRewardRuleRequest) -> ReferralRewardRuleResponse:
-    return GrowthService.update_rule(payload.invites_required, payload.vip_days_reward)
+    return GrowthService.update_rule(payload.invites_required, payload.vip_days_reward, payload.points_per_invite)
+
+
+@router.get('/leaderboard', response_model=LeaderboardResponse)
+def leaderboard(period: str = Query(default='weekly')) -> LeaderboardResponse:
+    return GrowthService.leaderboard(period=period)
