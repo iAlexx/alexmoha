@@ -2,16 +2,18 @@
 
 منصة ذكاء مالي متكاملة لمراقبة أسواق **Forex** و **Crypto** مع توزيع تنبيهات دقيقة على Telegram + لوحة تحكم ويب.
 
-## What is included in this starter
+## What is included now
 
-This repository provides a production-oriented foundation for the requested system:
+This repository now provides an **advanced MVP foundation** for the requested system:
 
 - **Hybrid data stack**: PostgreSQL + Redis + Vector DB (Qdrant).
 - **Async at scale**: Celery + RabbitMQ for fan-out messaging.
-- **Bilingual-ready API**: Arabic/English response model.
+- **Bilingual API contracts**: Arabic/English models for critical outputs.
 - **AI pipeline skeleton**: semantic de-duplication + sentiment + impact scoring.
-- **Tier-ready product model**: Basic / VIP / VIP+.
-- **Admin operations hooks**: maintenance mode + emergency stop flags.
+- **Market intelligence endpoints**: correlation radar + whale detector.
+- **Growth endpoints**: referral summary + reward rules.
+- **Admin controls**: maintenance mode and emergency pause.
+- **API anti-spam guard**: request window throttling per client.
 
 ## Architecture (high level)
 
@@ -48,11 +50,16 @@ Services:
 - `POST /v1/news/ingest`
 - `POST /v1/news/ask`
 - `POST /v1/alerts/economic-calendar`
+- `POST /v1/market/correlation-radar`
+- `POST /v1/market/whale-detector`
+- `GET /v1/growth/referrals/{user_id}`
+- `GET/PUT /v1/growth/referral-rules`
+- `GET/PATCH /v1/admin/runtime-flags`
 
-## Next implementation milestones
+## Finalization roadmap (to reach fully production)
 
-1. Integrate real news feeds (RSS, premium APIs, on-chain sources).
-2. Add multilingual template builder for Telegram messages.
-3. Connect TTS provider for VIP+ audio flashes.
-4. Implement referral leaderboard and affiliate payouts.
-5. Add full admin dashboard (React/Next.js).
+1. Integrate real market/news feeds and normalize symbols/timestamps.
+2. Replace heuristic AI with embeddings + LLM inference + evaluation harness.
+3. Implement persistent DB models/migrations and robust auth/RBAC.
+4. Build Telegram template engine + channel operator toolkit.
+5. Add full web dashboard (operations room, template builder, finance analytics).
