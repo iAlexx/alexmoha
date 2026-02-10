@@ -12,3 +12,9 @@ class RuntimeFlagsResponse(BaseModel):
 class RuntimeFlagsUpdateRequest(BaseModel):
     maintenance_mode: bool | None = None
     emergency_pause: bool | None = None
+
+
+class AdminDashboardResponse(BaseModel):
+    admin_id: str
+    webapp_url: str
+    commands: list[str]

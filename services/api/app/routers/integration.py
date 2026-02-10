@@ -25,4 +25,4 @@ def white_label_tenant(payload: WhiteLabelTenantRequest) -> WhiteLabelTenantResp
 
 @router.post('/infographic/generate', response_model=InfographicGenerateResponse)
 def infographic_generate(payload: InfographicGenerateRequest) -> InfographicGenerateResponse:
-    return IntegrationService.generate_infographic(payload.headline, payload.symbol, payload.bot_link)
+    return IntegrationService.generate_infographic(payload.headline, payload.summary, payload.symbol, payload.bot_link)

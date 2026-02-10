@@ -18,16 +18,22 @@ celery_app.conf.update(
 
 @celery_app.task(name='dispatch.telegram')
 def dispatch_telegram(payload: dict) -> dict:
-    recipients = int(payload.get('recipients', 0))
+    recipients = payload.get('recipient_ids', [])
+    total = len(recipients)
     per_second = 30
-    seconds = ceil(recipients / per_second) if recipients > 0 else 0
+    total_batches = ceil(total / per_second) if total else 0
+    batches = [
+        recipients[idx: idx + per_second]
+        for idx in range(0, total, per_second)
+    ]
     return {
         'status': 'queued',
-        'recipients': recipients,
+        'recipients': total,
         'queue': 'telegram',
         'rate_limit_per_second': per_second,
-        'estimated_seconds': seconds,
-        'batches': seconds,
+        'estimated_seconds': total_batches,
+        'batches': total_batches,
+        'batch_sizes': [len(batch) for batch in batches],
     }
 
 

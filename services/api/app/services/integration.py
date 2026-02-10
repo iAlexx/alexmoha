@@ -5,6 +5,7 @@ from app.schemas.integration import (
     WebhookProvisionResponse,
     WhiteLabelTenantResponse,
 )
+from app.services.infographic import InfographicService
 
 
 class IntegrationService:
@@ -25,7 +26,8 @@ class IntegrationService:
         return WhiteLabelTenantResponse(tenant_name=tenant_name, enabled=True, theme_id=theme_id)
 
     @staticmethod
-    def generate_infographic(headline: str, symbol: str, bot_link: str) -> InfographicGenerateResponse:
+    def generate_infographic(headline: str, summary: str, symbol: str, bot_link: str) -> InfographicGenerateResponse:
         image_id = hashlib.sha1(f'{headline}:{symbol}'.encode('utf-8')).hexdigest()[:12]
-        caption = f'{headline} | {symbol}\nMore on bot: {bot_link}'
-        return InfographicGenerateResponse(image_id=image_id, share_caption=caption, render_eta_ms=450)
+        image_path = InfographicService.render(image_id=image_id, headline=headline, summary=summary, symbol=symbol)
+        caption = f'{headline} | {symbol}\n{summary}\nMore on bot: {bot_link}'
+        return InfographicGenerateResponse(image_id=image_id, image_path=image_path, share_caption=caption, render_eta_ms=450)

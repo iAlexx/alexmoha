@@ -33,5 +33,6 @@ class InfographicGenerateRequest(BaseModel):
 
 class InfographicGenerateResponse(BaseModel):
     image_id: str
+    image_path: str
     share_caption: str
     render_eta_ms: int = Field(..., ge=0)

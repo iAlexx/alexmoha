@@ -1,58 +1,44 @@
 # Ultimate Financial Intelligence Bot
 
-منصة ذكاء مالي متكاملة لمراقبة أسواق **Forex** و **Crypto** مع توزيع تنبيهات دقيقة على Telegram + لوحة تحكم ويب.
+منصة ذكاء مالي متكاملة لمراقبة أسواق **Forex** و **Crypto** مع تنبيهات Telegram ولوحة WebApp.
 
-## Included subsystems
+## VPS quick deployment
 
-- Core stack: PostgreSQL + Redis + RabbitMQ/Celery + Qdrant.
-- Async dispatch: Celery with Redis broker support + token-safe batching (30 msg/sec planning).
-- News intelligence: ingest/ask + dedup/sentiment/impact.
-- Proactive intelligence: session master, gap detector, noise filter.
-- AI editor engine: LLM-ready auto-format, financial translation, summarization, admin tone control.
-- AI optimization: 10-minute AI output caching + fixed system prompt context.
-- Historical insight: instant backtest endpoints and historical reaction summaries.
-- Voice interaction: STT-ready voice query endpoint.
-- Daily Digest AI: end-of-day summarized market digest.
-- Flow analytics: smart heatmap, divergence alert, liquidity-level proximity.
-- Social/Growth: sentiment votes, whale watch, referrals, points, leaderboard.
-- Pro integrations: VIP+ webhook, infographic generator, white-label provisioning.
-- AI Trading Coach: VIP+ trading notes + monthly performance report.
-- Psychological alerts: calm alerts in extreme volatility.
-- UI/UX controls: inline keyboard payload endpoint per news item.
-- Excellence engine: trust score, trade readiness, personalization, post-event accuracy, and channel growth kit.
-- Ops/infra maturity: failover source fetching, system health endpoint, anti-noise preferences, critical mode, post-market insights, Telegram WebApp config.
-- Advanced DB schema included for users/subscriptions/activity logs.
-
-## Key endpoint groups
-
-- `/v1/news`, `/v1/alerts`, `/v1/intelligence`, `/v1/market`
-- `/v1/editor`, `/v1/voice`, `/v1/digest`, `/v1/analysis`, `/v1/excellence`
-- `/v1/coach`, `/v1/psychology`, `/v1/uiux`, `/v1/ops`, `/v1/infra`
-- `/v1/growth`, `/v1/social`, `/v1/integration`, `/v1/admin`
-
-## Queue-first performance design
-
-Heavy/async workloads execute in Celery queues: broadcast, voice/STT, AI editor jobs, daily digest, heatmap generation, webhook fanout, infographic render, accuracy/growth analytics.
-
-## Environment and secrets
-
-Use environment variables (recommended via `.env`) for keys and endpoints:
-
-- `OPENAI_API_KEY`
-- `LLM_SYSTEM_PROMPT`
-- `DEVELOPER_ALERT_WEBHOOK`
-- `PRIMARY_NEWS_API`
-- `BACKUP_NEWS_API`
-- `CELERY_BROKER_URL`
-
-## Database schema
-
-Reference SQL schema for users/subscriptions/activity logs:
-
-- `services/api/app/db/schema.sql`
-
-## Quick start
+1. انسخ `.env.example` إلى `.env` ثم عبّئ القيم الأساسية:
+   - `BOT_TOKEN`
+   - `ADMIN_ID`
+   - `AI_TOKEN`
+   - `DB_URL`
+2. شغّل:
 
 ```bash
-docker compose up --build
+docker compose up -d --build
 ```
+
+## Core architecture
+
+- API: FastAPI
+- Async queues: Celery + Redis
+- DB: PostgreSQL
+- Bot runtime: `services/bot`
+- Daily DB backup service: `backup`
+
+## Key production features
+
+- Centralized env configuration (no code edits required after filling `.env`).
+- AI formatter with OpenAI/Gemini support and automatic timeout fallback to raw news.
+- Admin access bound to `ADMIN_ID` header (`X-Admin-Id`) and admin dashboard endpoint.
+- Immediate admin alerts (Telegram) for technical/API failures and AI quota issues.
+- Infographic engine that generates PNG cards for urgent news with caption.
+- Advanced broadcasting queue planning with Telegram-safe `30 msg/sec` batching.
+- Auto-recovery (`restart: always`) for all core containers.
+- Automated daily DB backup to `./backups`.
+
+## Important endpoints
+
+- Health: `GET /health`
+- Admin dashboard: `GET /v1/admin/dashboard`
+- Runtime flags: `GET/PATCH /v1/admin/runtime-flags`
+- AI editor: `POST /v1/editor/format`
+- Infographic generation: `POST /v1/integration/infographic/generate`
+

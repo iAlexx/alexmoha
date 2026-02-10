@@ -1,5 +1,7 @@
 from collections import defaultdict
 
+from app.core.settings import settings
+
 
 class OpsService:
     def __init__(self) -> None:
@@ -36,7 +38,7 @@ class OpsService:
     def telegram_webapp_config() -> dict:
         return {
             'enabled': True,
-            'webapp_url': 'https://app.finintel.local/telegram-webapp',
+            'webapp_url': settings.telegram_webapp_url,
             'features': ['preferences', 'watchlist', 'tier', 'alerts'],
         }
 

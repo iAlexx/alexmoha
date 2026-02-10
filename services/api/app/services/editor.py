@@ -1,8 +1,7 @@
-import os
-
 from app.core.settings import settings
 from app.schemas.editor import Tone
 from app.services.cache import ai_cache_service
+from app.utils.formatter import format_news_with_ai
 
 
 class AutoEditorService:
@@ -19,7 +18,9 @@ class AutoEditorService:
 
     @staticmethod
     def llm_provider() -> str:
-        return 'openai' if os.getenv('OPENAI_API_KEY') else 'stub'
+        if not settings.ai_token:
+            return 'fallback'
+        return settings.llm_provider
 
     @staticmethod
     def system_prompt() -> str:
@@ -33,15 +34,13 @@ class AutoEditorService:
             return cached.get('formatted_markdown', ''), cached.get('translated_ar')
 
         selected = tone or cls._admin_tone
+        formatted_body = format_news_with_ai(raw_text)
         prefix = '⚡️' if selected in {'aggressive', 'fast_news'} else '🧠'
         formatted = (
-            f"{prefix} *{source.upper()}*\n\n{raw_text}\n\n"
-            f"_Style: {selected} | Provider: {cls.llm_provider()}_\n"
-            f"_Prompt: {cls.system_prompt()}_"
+            f"{prefix} *{source.upper()}*\\n\\n{formatted_body}\\n\\n"
+            f"_Style: {selected} | Provider: {cls.llm_provider()}_"
         )
-        translated = None
-        if lang == 'ar':
-            translated = f"📌 ترجمة مالية سريعة:\n{raw_text}"
+        translated = f'📌 ترجمة مالية سريعة:\n{formatted_body}' if lang == 'ar' else None
 
         ai_cache_service.set(cache_key, {'formatted_markdown': formatted, 'translated_ar': translated})
         return formatted, translated
@@ -49,4 +48,4 @@ class AutoEditorService:
     @staticmethod
     def summarize(text: str, max_points: int) -> list[str]:
         parts = [p.strip() for p in text.replace('\n', '. ').split('.') if p.strip()]
-        return [f"• {p}" for p in parts[:max_points]] or ['• No key points extracted']
+        return [f'• {p}' for p in parts[:max_points]] or ['• No key points extracted']
