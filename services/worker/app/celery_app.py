@@ -58,3 +58,13 @@ def heatmap_generate(payload: dict) -> dict:
 @celery_app.task(name='voice.stt')
 def voice_stt(payload: dict) -> dict:
     return {'status': 'transcribed', 'audio_url': payload.get('audio_url'), 'queue': 'voice'}
+
+
+@celery_app.task(name='accuracy.report')
+def accuracy_report(payload: dict) -> dict:
+    return {'status': 'computed', 'event_id': payload.get('event_id'), 'queue': 'analytics'}
+
+
+@celery_app.task(name='channel.growth.report')
+def channel_growth_report(payload: dict) -> dict:
+    return {'status': 'generated', 'channel_id': payload.get('channel_id'), 'queue': 'analytics'}

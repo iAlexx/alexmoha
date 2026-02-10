@@ -17,11 +17,12 @@
 - AI Trading Coach: VIP+ trading notes + monthly performance report.
 - Psychological alerts: calm alerts in extreme volatility.
 - UI/UX controls: inline keyboard payload endpoint per news item.
+- Excellence engine: trust score, trade readiness, personalization, post-event accuracy, and channel growth kit.
 
 ## Key endpoint groups
 
 - `/v1/news`, `/v1/alerts`, `/v1/intelligence`, `/v1/market`
-- `/v1/editor`, `/v1/voice`, `/v1/digest`, `/v1/analysis`
+- `/v1/editor`, `/v1/voice`, `/v1/digest`, `/v1/analysis`, `/v1/excellence`
 - `/v1/coach`, `/v1/psychology`, `/v1/uiux`
 - `/v1/growth`, `/v1/social`, `/v1/integration`, `/v1/admin`
 

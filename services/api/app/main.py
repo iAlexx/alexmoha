@@ -6,6 +6,7 @@ from app.routers.alerts import router as alerts_router
 from app.routers.coach import router as coach_router
 from app.routers.digest import router as digest_router
 from app.routers.editor import router as editor_router
+from app.routers.excellence import router as excellence_router
 from app.routers.growth import router as growth_router
 from app.routers.health import router as health_router
 from app.routers.integration import router as integration_router
@@ -33,6 +34,7 @@ app.include_router(intelligence_router, prefix='/v1/intelligence', tags=['intell
 app.include_router(integration_router, prefix='/v1/integration', tags=['integration'])
 app.include_router(social_router, prefix='/v1/social', tags=['social'])
 app.include_router(editor_router, prefix='/v1/editor', tags=['editor'])
+app.include_router(excellence_router, prefix='/v1/excellence', tags=['excellence'])
 app.include_router(voice_router, prefix='/v1/voice', tags=['voice'])
 app.include_router(digest_router, prefix='/v1/digest', tags=['digest'])
 app.include_router(advanced_analysis_router, prefix='/v1/analysis', tags=['analysis'])
