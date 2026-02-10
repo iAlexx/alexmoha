@@ -13,6 +13,7 @@ services:
       REDIS_URL: redis://redis:6379/0
       RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672//
       VECTOR_URL: http://qdrant:6333
+      CELERY_BROKER_URL: redis://redis:6379/0
     depends_on:
       - postgres
       - redis
@@ -28,6 +29,7 @@ services:
       REDIS_URL: redis://redis:6379/0
       RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672//
       VECTOR_URL: http://qdrant:6333
+      CELERY_BROKER_URL: redis://redis:6379/0
     depends_on:
       - postgres
       - redis

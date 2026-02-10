@@ -1,8 +1,9 @@
 import os
+from math import ceil
 
 from celery import Celery
 
-broker_url = os.getenv('RABBITMQ_URL', 'amqp://guest:guest@localhost:5672//')
+broker_url = os.getenv('CELERY_BROKER_URL', os.getenv('REDIS_URL', 'redis://localhost:6379/0'))
 backend_url = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
 
 celery_app = Celery('finintel_worker', broker=broker_url, backend=backend_url)
@@ -17,7 +18,17 @@ celery_app.conf.update(
 
 @celery_app.task(name='dispatch.telegram')
 def dispatch_telegram(payload: dict) -> dict:
-    return {'status': 'queued', 'recipients': payload.get('recipients', 0), 'queue': 'telegram'}
+    recipients = int(payload.get('recipients', 0))
+    per_second = 30
+    seconds = ceil(recipients / per_second) if recipients > 0 else 0
+    return {
+        'status': 'queued',
+        'recipients': recipients,
+        'queue': 'telegram',
+        'rate_limit_per_second': per_second,
+        'estimated_seconds': seconds,
+        'batches': seconds,
+    }
 
 
 @celery_app.task(name='audio.flash')
@@ -68,3 +79,8 @@ def accuracy_report(payload: dict) -> dict:
 @celery_app.task(name='channel.growth.report')
 def channel_growth_report(payload: dict) -> dict:
     return {'status': 'generated', 'channel_id': payload.get('channel_id'), 'queue': 'analytics'}
+
+
+@celery_app.task(name='post.market.insights')
+def post_market_insights(payload: dict) -> dict:
+    return {'status': 'generated', 'date': payload.get('date'), 'queue': 'analytics'}
