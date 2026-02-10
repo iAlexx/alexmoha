@@ -11,9 +11,9 @@ router = APIRouter()
 
 
 @router.get('/dashboard', response_model=AdminDashboardResponse)
-def admin_dashboard(_: Annotated[str, Depends(require_admin)]) -> AdminDashboardResponse:
+def admin_dashboard(admin_host: Annotated[str, Depends(require_admin)]) -> AdminDashboardResponse:
     return AdminDashboardResponse(
-        admin_id='local-admin',
+        admin_id=admin_host,
         webapp_url=settings.telegram_webapp_url,
         commands=['broadcast', 'vip_codes', 'stats', 'maintenance_mode', 'emergency_pause'],
     )
