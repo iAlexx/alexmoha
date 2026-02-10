@@ -38,3 +38,23 @@ def infographic_render(payload: dict) -> dict:
 @celery_app.task(name='webhook.fanout')
 def webhook_fanout(payload: dict) -> dict:
     return {'status': 'delivered', 'targets': len(payload.get('targets', [])), 'queue': 'webhook'}
+
+
+@celery_app.task(name='editor.auto')
+def editor_auto(payload: dict) -> dict:
+    return {'status': 'edited', 'provider': payload.get('provider', 'openai'), 'queue': 'ai_editor'}
+
+
+@celery_app.task(name='digest.daily')
+def digest_daily(payload: dict) -> dict:
+    return {'status': 'generated', 'date': payload.get('date'), 'queue': 'digest'}
+
+
+@celery_app.task(name='heatmap.generate')
+def heatmap_generate(payload: dict) -> dict:
+    return {'status': 'generated', 'window_h': payload.get('window_h', 4), 'queue': 'analysis'}
+
+
+@celery_app.task(name='voice.stt')
+def voice_stt(payload: dict) -> dict:
+    return {'status': 'transcribed', 'audio_url': payload.get('audio_url'), 'queue': 'voice'}
